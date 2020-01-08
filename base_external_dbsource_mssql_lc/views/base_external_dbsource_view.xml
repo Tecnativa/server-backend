@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!-- Copyright 2018 Tecnativa - Sergio Teruel
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+
+<odoo>
+
+    <record id="view_dbsource_form" model="ir.ui.view">
+        <field name="model">base.external.dbsource</field>
+        <field name="inherit_id"
+               ref="base_external_dbsource.view_dbsource_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <notebook name="mssql_sagelc" attrs="{'invisible': [('connector', '!=', 'mssql')]}">
+                    <page string="MsSql SAGE Logic Class">
+                        <group>
+                            <group string="Account">
+                                <div>Import bank journals</div>
+                                <button name="action_import_bank_journal_sage" type="object" string="Bank Journal" invisible="1"/>
+                                <div>Import journals</div>
+                                <button name="action_import_journal_sage" type="object" string="Account Journal"/>
+                                <div>Supplier Payment Modes</div>
+                                <button name="action_import_payment_mode_sage" type="object" string="Supplier Payment Mode"/>
+                                <div>Supplier Payment Terms</div>
+                                <button name="action_import_payment_term_sage" type="object" string="Supplier Payment Term"/>
+                                <div>Analytic Accounts</div>
+                                <button name="action_import_analytic_account_sage" type="object" string="Analytic Account"/>
+                                <div>Accounts</div>
+                                <button name="action_import_account_sage" type="object" string="Account Chart"/>
+                                <!--<div>Accounts Moves</div>-->
+                                <!--<button name="action_import_account_move_sage" type="object" string="Account Moves"/>-->
+                                <div>Only Update Accounts Moves reconcile link</div>
+                                <button name="action_update_account_move_line" type="object" string="Update Account Moves"/>
+                            </group>
+                            <group string="Partners">
+                                <div>Import / Update customers</div>
+                                <button name="action_import_customer_sage" type="object" string="Update Partners"/>
+                                <div>Contactos</div>
+                                <button name="action_import_contact_sage" type="object" string="Contacts"/>
+                                <div>Import customers bank accounts</div>
+                                <button name="action_import_partner_bank_sage" type="object" string="Bank Account"/>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
