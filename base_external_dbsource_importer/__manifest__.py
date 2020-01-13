@@ -3,7 +3,7 @@
 {
     "name": "Base External Dbsource Importer",
     "summary": "Import data from external DB Sources",
-    "version": "12.0.1.0.0",
+    "version": "13.0.1.0.0",
     "development_status": "Alpha",
     "category": "Tools",
     "website": "https://github.com/OCA/server-backend",
