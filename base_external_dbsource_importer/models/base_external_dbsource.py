@@ -139,13 +139,14 @@ class BaseExternalDbsource(models.Model):
     @api.model
     @ormcache('code')
     def _state_country_from_zip(self, code=None):
-        BetterZip = better_zip = self.env['res.better.zip']
+        CityZip = city_zip = self.env['res.city.zip']
         if code:
-            better_zip = BetterZip.search([
-                ('name', '=', '{}001'.format(code)),
+            city_zip = CityZip.search([
+                ('name', '=', code),
             ], limit=1)
-        return (better_zip.state_id.id, better_zip.country_id.id,
-                better_zip.country_id.code)
+        return (city_zip.city_id.state_id.id, city_zip.city_id.country_id.id,
+                city_zip.city_id.country_id.code, city_zip.id,
+                city_zip.city_id.id)
 
     def _validate_vat(self, vals, country_code):
         ResPartner = self.env['res.partner']
@@ -163,7 +164,10 @@ class BaseExternalDbsource(models.Model):
         if ResPartner.simple_vat_check(country_code.lower(), vat):
             vals['vat'] = full_vat
         else:
-            vals['comment'] = 'VAT: {}'.format(full_vat)
+            if vals['comment']:
+                vals['comment'] += '\nVAT: {}'.format(full_vat)
+            else:
+                vals['comment'] = 'VAT: {}'.format(full_vat)
         return vals
 
 
