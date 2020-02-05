@@ -138,5 +138,5 @@ class DbsourceExternalMixin(models.AbstractModel):
                             continue
                         field = self._fields[name]
                         field.write(record.with_context(rel_context),
-                                    field_value, create=True)
+                                    field_value)
         return self.browse(ids)
