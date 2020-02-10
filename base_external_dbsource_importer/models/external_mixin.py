@@ -20,9 +20,7 @@ class DbsourceExternalMixin(models.AbstractModel):
     @api.model
     def search_external(self, key_value, field_key):
         domain = [(field_key, "=", key_value)]
-        if hasattr(self, "active"):
-            domain.extend(["|", ("active", "=", True), ("active", "=", False)])
-        return self.search(domain)
+        return self.with_context(active_test=False).search(domain)
 
     def create_bypassed(self, vals_list):
         # From v12 create method
@@ -131,7 +129,5 @@ class DbsourceExternalMixin(models.AbstractModel):
                         if not field_value:
                             continue
                         field = self._fields[name]
-                        field.write(
-                            record.with_context(rel_context), field_value, create=True
-                        )
+                        field.write(record.with_context(rel_context), field_value)
         return self.browse(ids)
