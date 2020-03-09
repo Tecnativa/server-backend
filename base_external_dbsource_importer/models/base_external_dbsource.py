@@ -34,6 +34,9 @@ class BaseExternalModel:
         self.index += 1
         return row
 
+    def __len__(self):
+        return len(self.rows)
+
 
 class BaseExternalModelImporter:
     _name = "base.external.model.importer"
