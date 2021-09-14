@@ -167,7 +167,7 @@ class BaseExternalDbsource(models.Model):
             return vals
         # Clean vat
         vat = vat.replace('-', '').replace('.', '').replace(' ', '').replace(
-            '*', '')
+            '*', '').upper()
         if not vat[1:2].isnumeric():
             country_code, vat = ResPartner._split_vat(vat)
         if not country_code:
