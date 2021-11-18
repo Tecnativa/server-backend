@@ -16,23 +16,24 @@ class DbsourceExternalMixin(models.AbstractModel):
     """ It provides the unique key for mysql table. """
 
     _name = "dbsource.external.mixin"
+    _external_field_key = "nexus_key"
 
     @api.model
     def search_external(self, key_value, field_key):
         """
         Mapped model is an model to mapp external records to only one
         """
-        mapped_model = self.env.context.get('mapped_model')
+        mapped_model = self.env.context.get("mapped_model")
         if mapped_model:
-            domain = [('nexus_key', '=', key_value)]
-            mapped = self.env['%s.mapped' % mapped_model].search(domain)
+            domain = [(self._external_field_key, "=", key_value)]
+            mapped = self.env["%s.mapped" % mapped_model].search(domain)
             if mapped:
                 key_value = mapped.mapped_key
 
         domain = [(field_key, "=", key_value)]
         return self.with_context(active_test=False).search(domain)
 
-    def create_bypassed(self, vals_list):
+    def create_bypassed(self, vals_list):  # noqa: C901
         # From v12 create method
         bad_names = {"id", "parent_path"}
         if self._log_access:
@@ -107,6 +108,7 @@ class DbsourceExternalMixin(models.AbstractModel):
                     other_fields.add(field)
 
             # insert a row with the given columns
+            # pylint: disable=E8103
             query = "INSERT INTO {} ({}) VALUES ({}) RETURNING id".format(
                 quote(self._table),
                 ", ".join(quote(name) for name, fmt, val in columns),

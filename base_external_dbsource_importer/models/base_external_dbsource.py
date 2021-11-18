@@ -149,37 +149,44 @@ class BaseExternalDbsource(models.Model):
         return "{:0>2}".format(98 - (int(number_iban) % 97))
 
     @api.model
-    @ormcache('code')
+    @ormcache("code")
     def _state_country_from_zip(self, code=None):
-        CityZip = city_zip = self.env['res.city.zip']
+        CityZip = city_zip = self.env["res.city.zip"]
         if code:
-            city_zip = CityZip.search([
-                ('name', '=', code),
-            ], limit=1)
-        return (city_zip.city_id.state_id.id, city_zip.city_id.country_id.id,
-                city_zip.city_id.country_id.code, city_zip.id,
-                city_zip.city_id.id)
+            city_zip = CityZip.search([("name", "=", code)], limit=1)
+        return (
+            city_zip.city_id.state_id.id,
+            city_zip.city_id.country_id.id,
+            city_zip.city_id.country_id.code,
+            city_zip.id,
+            city_zip.city_id.id,
+        )
 
     def _validate_vat(self, vals, country_code):
-        ResPartner = self.env['res.partner']
-        vat = vals.pop('vat', False)
+        ResPartner = self.env["res.partner"]
+        vat = vals.pop("vat", False)
         if not vat:
             return vals
         # Clean vat
-        vat = vat.replace('-', '').replace('.', '').replace(' ', '').replace(
-            '*', '').upper()
+        vat = (
+            vat.replace("-", "")
+            .replace(".", "")
+            .replace(" ", "")
+            .replace("*", "")
+            .upper()
+        )
         if not vat[1:2].isnumeric():
             country_code, vat = ResPartner._split_vat(vat)
         if not country_code:
-            country_code = 'ES'
-        full_vat = '{}{}'.format(country_code.upper(), vat)
+            country_code = "ES"
+        full_vat = "{}{}".format(country_code.upper(), vat)
         if ResPartner.simple_vat_check(country_code.lower(), vat):
-            vals['vat'] = full_vat
+            vals["vat"] = full_vat
         else:
-            if vals['comment']:
-                vals['comment'] += '\nVAT: {}'.format(full_vat)
+            if vals["comment"]:
+                vals["comment"] += "\nVAT: {}".format(full_vat)
             else:
-                vals['comment'] = 'VAT: {}'.format(full_vat)
+                vals["comment"] = "VAT: {}".format(full_vat)
         return vals
 
 
