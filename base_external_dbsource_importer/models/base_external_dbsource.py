@@ -164,7 +164,8 @@ class BaseExternalDbsource(models.Model):
 
     def _validate_vat(self, vals, country_code):
         ResPartner = self.env["res.partner"]
-        vat = vals.pop("vat", False)
+        original_vat = vals.pop("vat", False)
+        vat = original_vat
         if not vat:
             return vals
         # Clean vat
@@ -183,10 +184,10 @@ class BaseExternalDbsource(models.Model):
         if ResPartner.simple_vat_check(country_code.lower(), vat):
             vals["vat"] = full_vat
         else:
-            if vals["comment"]:
-                vals["comment"] += "\nVAT: {}".format(full_vat)
+            if vals.get("comment", False):
+                vals["comment"] += "\nVAT: {}".format(original_vat)
             else:
-                vals["comment"] = "VAT: {}".format(full_vat)
+                vals["comment"] = "VAT: {}".format(original_vat)
         return vals
 
 
