@@ -138,6 +138,8 @@ class BaseExternalDbsource(models.Model):
     def get_m2_odoo_id(
         self, model_name, key_value, field_key="fds_key", return_field="id"
     ):
+        if not key_value:
+            return False
         record = self.env[model_name].search_external(key_value, field_key)
         return record.id if return_field == "id" else record[return_field].id
 
