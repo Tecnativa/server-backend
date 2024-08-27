@@ -4,6 +4,8 @@
 import logging
 import string
 
+from sqlalchemy import text
+
 from odoo import api, fields, models
 from odoo.tools import ormcache
 
@@ -53,7 +55,7 @@ class BaseExternalModelImporter:
 
     def _get_external_records(self, table_name, fields="*", where=""):
         sql = f"SELECT {fields} FROM {table_name} {where};"
-        rows, cols = self.execute_query(sql, [], metadata=True)
+        rows, cols = self.execute_query(text(sql), [], metadata=True)
         fds_records = BaseExternalModel(self.env.cr, rows, cols)
         return fds_records
 
