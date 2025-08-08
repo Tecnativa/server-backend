@@ -123,7 +123,7 @@ class BaseExternalModelImporter:
 
     def get_m2_odoo_id(self, model_name, key_value, field_key=False, return_field="id"):
         return self.dbsource.get_m2_odoo_id(
-            model_name, key_value, field_key or self._external_key, return_field
+            model_name, key_value, field_key or self._external_key, return_field, raise_if_singleton=raise_if_singleton
         )
 
 
@@ -148,11 +148,13 @@ class BaseExternalDbsource(models.Model):
     @api.model
     @ormcache("model_name", "key_value", "field_key", "return_field")
     def get_m2_odoo_id(
-        self, model_name, key_value, field_key="fds_key", return_field="id"
+        self, model_name, key_value, field_key="fds_key", return_field="id", raise_if_singleton=True
     ):
         if not key_value:
             return False
         record = self.env[model_name].search_external(key_value, field_key)
+        if not raise_if_singleton and len(record) > 1:
+            return False
         return record.id if return_field == "id" else record[return_field].id
 
     def _number_iban(self, iban):
