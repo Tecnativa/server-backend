@@ -121,9 +121,20 @@ class BaseExternalModelImporter:
             records_dic[fds_key] = record.id
         return record
 
-    def get_m2_odoo_id(self, model_name, key_value, field_key=False, return_field="id"):
+    def get_m2_odoo_id(
+        self,
+        model_name,
+        key_value,
+        field_key=False,
+        return_field="id",
+        raise_if_singleton=True,
+    ):
         return self.dbsource.get_m2_odoo_id(
-            model_name, key_value, field_key or self._external_key, return_field, raise_if_singleton=raise_if_singleton
+            model_name,
+            key_value,
+            field_key or self._external_key,
+            return_field,
+            raise_if_singleton=raise_if_singleton,
         )
 
 
@@ -148,7 +159,12 @@ class BaseExternalDbsource(models.Model):
     @api.model
     @ormcache("model_name", "key_value", "field_key", "return_field")
     def get_m2_odoo_id(
-        self, model_name, key_value, field_key="fds_key", return_field="id", raise_if_singleton=True
+        self,
+        model_name,
+        key_value,
+        field_key="fds_key",
+        return_field="id",
+        raise_if_singleton=True,
     ):
         if not key_value:
             return False
