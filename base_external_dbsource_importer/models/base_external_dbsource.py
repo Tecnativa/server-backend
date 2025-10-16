@@ -193,6 +193,11 @@ class BaseExternalDbsource(models.Model):
         return f"{98 - (int(number_iban) % 97):0>2}"
 
     @api.model
+    @ormcache("value")
+    def get_country(self, value):
+        return self.env["res.country"].search([("code", "=", value)]).id
+
+    @api.model
     @ormcache("code", "country_code")
     def _state_country_from_zip(self, code=None, country_code=None):
         CityZip = city_zip = self.env["res.city.zip"]
@@ -234,6 +239,8 @@ class BaseExternalDbsource(models.Model):
             country_code = "ES"
         full_vat = f"{country_code.upper()}{vat}"
         if ResPartner.simple_vat_check(country_code.lower(), vat):
+            country_id = self.get_country(country_code)
+            full_vat = ResPartner._fix_vat_number(full_vat, country_id)
             vals["vat"] = full_vat
         else:
             if vals.get("comment", False):
