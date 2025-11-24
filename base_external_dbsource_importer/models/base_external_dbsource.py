@@ -199,6 +199,12 @@ class BaseExternalDbsource(models.Model):
                 vals["comment"] += "\nVAT: {}".format(original_vat)
             else:
                 vals["comment"] = "VAT: {}".format(original_vat)
+            vals.update(
+                {
+                    "aeat_identification_type": "06",
+                    "aeat_identification": original_vat,
+                }
+            )
         return vals
 
     def generate_data_mapped_from_file(self, sheet_dic):

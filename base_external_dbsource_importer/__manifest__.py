@@ -10,6 +10,6 @@
     "author": "Tecnativa, Odoo Community Association (OCA)",
     "license": "AGPL-3",
     "installable": True,
-    "depends": ["base_external_dbsource", "base_location"],
+    "depends": ["base_external_dbsource", "base_location", "l10n_es_aeat"],
     "data": ["security/ir.model.access.csv", "views/base_external_dbsource_view.xml"],
 }
