@@ -76,6 +76,7 @@ class BaseExternalModelImporter:
         odoo_key="",
         load_all_odoo_records=False,
         origin=False,
+        company=False,
     ):
         odoo_key = odoo_key or self._external_key
         Model = self.env[model_name]
@@ -86,8 +87,10 @@ class BaseExternalModelImporter:
         else:
             fds_records = self._get_external_records_from_file()
         domain = []
+        if company:
+            domain.append(("company_id", "=", company.id))
         if not load_all_odoo_records:
-            domain = [(odoo_key, "!=", False)]
+            domain.append((odoo_key, "!=", False))
         if hasattr(Model, "active"):
             domain.extend(["|", ("active", "=", True), ("active", "=", False)])
         records = Model.search(domain).with_context(prefetch_fields=False)
