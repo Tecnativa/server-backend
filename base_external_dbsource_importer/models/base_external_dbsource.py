@@ -283,6 +283,11 @@ class BaseExternalDbsource(models.Model):
                 data_dic[sheet_name][vila_code] = odoo_external
         return data_dic
 
+    @ormcache("currency_code")
+    def get_currency(self, currency_code):
+        domain = [("name", "=", currency_code)]
+        return self.env["res.currency"].search(domain, limit=1).id
+
 
 class DbSourceFieldsUpdate(models.Model):
     _name = "base.external.dbsource.fields.update"
