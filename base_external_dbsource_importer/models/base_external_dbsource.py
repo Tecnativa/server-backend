@@ -222,6 +222,18 @@ class BaseExternalDbsource(models.Model):
             city_zip.city_id.id,
         )
 
+    def _clean_vat(self, vat):
+        # Remove the 2 chars first
+        if len(vat) >= 2 and (not vat[0].isdigit() and not vat[1].isdigit()):
+            vat = vat[2:]
+        return (
+            vat.replace("-", "")
+            .replace(".", "")
+            .replace(" ", "")
+            .replace("*", "")
+            .upper()
+        )
+
     def _validate_vat(self, vals, country_code):
         ResPartner = self.env["res.partner"]
         original_vat = vals.pop("vat", False)
@@ -229,13 +241,7 @@ class BaseExternalDbsource(models.Model):
         if not vat:
             return vals
         # Clean vat
-        vat = (
-            vat.replace("-", "")
-            .replace(".", "")
-            .replace(" ", "")
-            .replace("*", "")
-            .upper()
-        )
+        vat = self._clean_vat(vat)
         if not vat[1:2].isnumeric():
             country_code, vat = ResPartner._split_vat(vat)
         if not country_code:
