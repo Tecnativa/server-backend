@@ -223,9 +223,6 @@ class BaseExternalDbsource(models.Model):
         )
 
     def _clean_vat(self, vat):
-        # Remove the 2 chars first
-        if len(vat) >= 2 and (not vat[0].isdigit() and not vat[1].isdigit()):
-            vat = vat[2:]
         return (
             vat.replace("-", "")
             .replace(".", "")
