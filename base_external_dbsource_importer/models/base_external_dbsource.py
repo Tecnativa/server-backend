@@ -232,6 +232,8 @@ class BaseExternalDbsource(models.Model):
         )
 
     def _validate_vat(self, vals, country_code):
+        if self.env.context.get("no_vat_validation", False):
+            return vals
         ResPartner = self.env["res.partner"]
         original_vat = vals.pop("vat", False)
         vat = original_vat
