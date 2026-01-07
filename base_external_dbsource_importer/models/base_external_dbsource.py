@@ -172,7 +172,7 @@ class BaseExternalDbsource(models.Model):
     )
 
     @api.model
-    @ormcache("model_name", "key_value", "field_key", "return_field")
+    @ormcache("self.company_id", "model_name", "key_value", "field_key", "return_field")
     def get_m2_odoo_id(
         self,
         model_name,
